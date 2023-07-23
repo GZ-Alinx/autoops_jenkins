@@ -1,0 +1,20 @@
+name: "autoops_jenkins"
+port: 51000
+logsAddress: "./logs/"
+
+mysql:
+  username: "root"
+  host: "121.37.204.75"
+  port: 3306
+  password: "adl1314520"
+  dbname: "autoops"
+  SetMaxOpenConns: 500
+  SetMaxIdleConns: 1000
+
+redis:
+  host: "121.37.204.75"
+  port: 6379
+  password: "adl1314520"
+  db: 01
+jwt:
+  key: "webapiverygood"
