@@ -28,10 +28,12 @@ func Routers() *gin.Engine {
 
 	// 开启路由，文档访问地址  go1.16版本之后需要安装最新版本： https://github.com/swaggo/swag
 	// go install github.com/swaggo/swag/cmd/swag@latest
-	Router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
+	// swag init  进行初始化，把更新的swag配置生成配置
+	Router.GET("/swagger/index.html", gs.WrapHandler(swaggerFiles.Handler))
 
 	// 日志和错误处理
 	Router.Use(middlewares.GinLogger(), middlewares.GinRecovery(true))
+
 	// 跨域问题解决
 	Router.Use(middlewares.Cors())
 

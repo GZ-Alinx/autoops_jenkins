@@ -386,6 +386,153 @@
                 }
             }
         },
+        "/v1/jenkins/add": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jenkins管理"
+                ],
+                "summary": "Jenkins配置添加",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access Token",
+                        "name": "Token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Jenkins信息",
+                        "name": "forms.Jenkins_INFO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/forms.Jenkins_INFO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/v1/jenkins/delete": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jenkins管理"
+                ],
+                "summary": "Jenkins配置删除",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access Token",
+                        "name": "Token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "jenkins URL信息",
+                        "name": "forms.Jenkins_INFO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/forms.UsernameForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/v1/jenkins/get": {
+            "post": {
+                "tags": [
+                    "Jenkins管理"
+                ],
+                "summary": "Jenkins查询(单个)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access Token",
+                        "name": "Token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "用户信息",
+                        "name": "url",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/forms.Jenkins_INFO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/v1/jenkins/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Jenkins管理"
+                ],
+                "summary": "Jenkins修改",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Insert your access Token",
+                        "name": "Token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "用户信息",
+                        "name": "forms.Jenkins_INFO",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/forms.Jenkins_INFO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/v1/user/add": {
             "post": {
                 "consumes": [
@@ -602,6 +749,29 @@
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "forms.Jenkins_INFO": {
+            "type": "object",
+            "required": [
+                "url"
+            ],
+            "properties": {
+                "login_password": {
+                    "type": "string"
+                },
+                "login_user": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }

@@ -1,0 +1,6 @@
+2023-07-24T11:32:11.864+0800	INFO	dao/user.go:32	用户已存在
+2023-07-24T11:32:11.864+0800	INFO	controller/user.go:195	用户已存在
+2023-07-24T11:33:52.277+0800	INFO	dao/user.go:32	用户已存在
+2023-07-24T11:33:52.278+0800	INFO	controller/user.go:195	用户已存在
+2023-07-24T11:53:21.652+0800	INFO	dao/user.go:32	用户已存在
+2023-07-24T11:53:21.652+0800	INFO	controller/user.go:195	用户已存在

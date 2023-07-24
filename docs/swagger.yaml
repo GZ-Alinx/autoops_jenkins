@@ -1,0 +1,536 @@
+definitions:
+  forms.Data:
+    properties:
+      connect_site:
+        type: string
+      database_type:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      passwd:
+        type: string
+      port:
+        type: string
+      username:
+        type: string
+    type: object
+  forms.Host:
+    properties:
+      ipaddress:
+        type: string
+      memory:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      port:
+        type: integer
+      username:
+        type: string
+    type: object
+  forms.Jenkins_INFO:
+    properties:
+      login_password:
+        type: string
+      login_user:
+        type: string
+      url:
+        type: string
+    required:
+    - url
+    type: object
+  forms.LoginForm:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - username
+    type: object
+  forms.UserAddForm:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  forms.UserInfo:
+    properties:
+      password:
+        maxLength: 20
+        minLength: 3
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  forms.UsernameForm:
+    properties:
+      username:
+        type: string
+    required:
+    - username
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登陆信息
+        in: body
+        name: forms.LoginForm
+        required: true
+        schema:
+          $ref: '#/definitions/forms.LoginForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 用户登陆
+      tags:
+      - 登陆认证
+  /v1/auth/logout:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 退出登陆
+      tags:
+      - 登陆认证
+  /v1/data/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 数据源信息
+        in: body
+        name: forms.Data
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Data'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 添加数据源
+      tags:
+      - 数据源管理
+  /v1/data/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 数据源信息
+        in: body
+        name: forms.Data
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Data'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 删除数据源
+      tags:
+      - 数据源管理
+  /v1/data/get:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 数据源信息
+        in: body
+        name: forms.Data
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Data'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 获取数据源
+      tags:
+      - 数据源管理
+  /v1/data/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 数据源信息
+        in: body
+        name: forms.Data
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Data'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 更新数据源
+      tags:
+      - 数据源管理
+  /v1/host/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 主机信息
+        in: body
+        name: forms.Host
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Host'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 添加主机
+      tags:
+      - 主机管理
+  /v1/host/del:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 主机信息
+        in: body
+        name: forms.Host
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Host'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 删除主机
+      tags:
+      - 主机管理
+  /v1/host/get:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 主机信息
+        in: body
+        name: forms.Host
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Host'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 获取主机(单个)
+      tags:
+      - 主机管理
+  /v1/host/getall:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 主机信息
+        in: body
+        name: forms.Host
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Host'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 获取主机(全部)
+      tags:
+      - 主机管理
+  /v1/host/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 主机信息
+        in: body
+        name: forms.Host
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Host'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 更新主机
+      tags:
+      - 主机管理
+  /v1/jenkins/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: Jenkins信息
+        in: body
+        name: forms.Jenkins_INFO
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Jenkins_INFO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Jenkins配置添加
+      tags:
+      - Jenkins管理
+  /v1/jenkins/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: jenkins URL信息
+        in: body
+        name: forms.Jenkins_INFO
+        required: true
+        schema:
+          $ref: '#/definitions/forms.UsernameForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Jenkins配置删除
+      tags:
+      - Jenkins管理
+  /v1/jenkins/get:
+    post:
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: url
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Jenkins_INFO'
+      responses:
+        "200":
+          description: OK
+      summary: Jenkins查询(单个)
+      tags:
+      - Jenkins管理
+  /v1/jenkins/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: forms.Jenkins_INFO
+        required: true
+        schema:
+          $ref: '#/definitions/forms.Jenkins_INFO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Jenkins修改
+      tags:
+      - Jenkins管理
+  /v1/user/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: forms.UserAddForm
+        required: true
+        schema:
+          $ref: '#/definitions/forms.UserAddForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 用户添加
+      tags:
+      - 用户管理
+  /v1/user/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: forms.UsernameForm
+        required: true
+        schema:
+          $ref: '#/definitions/forms.UsernameForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 用户删除
+      tags:
+      - 用户管理
+  /v1/user/get:
+    post:
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: username
+        required: true
+        schema:
+          $ref: '#/definitions/forms.UsernameForm'
+      responses:
+        "200":
+          description: OK
+      summary: 用户查询(单个)
+      tags:
+      - 用户管理
+  /v1/user/getall:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 用户查询(全部)
+      tags:
+      - 用户管理
+  /v1/user/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Insert your access Token
+        in: header
+        name: Token
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: forms.UserInfo
+        required: true
+        schema:
+          $ref: '#/definitions/forms.UserInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: 用户修改
+      tags:
+      - 用户管理
+swagger: "2.0"

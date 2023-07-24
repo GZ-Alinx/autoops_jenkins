@@ -17,7 +17,7 @@ func SetJenkins_Info(Jenkins_form *forms.Jenkins_form) (bool, string) {
 	Jenkins.Url = Jenkins_form.Url
 
 	// 数据处理
-	if ok, response := JenkinCheckIsExistURL(Jenkins_form.Url); !ok {
+	if ok, response := JenkinCheckIsExistURL(Jenkins_form.Url); ok {
 		return false, response
 	}
 	result := global.DB.Create(&Jenkins)
@@ -81,3 +81,5 @@ func Getjenkins(url string) (*models.JenkinsInfo, string) {
 		}
 	}
 }
+
+//  jenkins job管理数据操作 不对接数据库 直接操作jenkins服务器获取

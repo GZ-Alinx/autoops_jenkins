@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// @Summary 用户添加
+// @Summary Jenkins配置添加
 // @Tags Jenkins管理
 // @Produce application/json
 // @Accept application/json
@@ -54,13 +54,13 @@ func JenkinsAdd(ctx *gin.Context) {
 	}
 }
 
-// @Summary 用户查询(单个)
-// @Tags 用户管理
+// @Summary Jenkins查询(单个)
+// @Tags Jenkins管理
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Token
 // @Param Token header string true "Insert your access Token"<Add access token here>
-// @Param username body forms.UsernameForm true  "用户信息"
+// @Param url body forms.Jenkins_INFO true  "用户信息"
 // @Success 200
 // @Router /v1/jenkins/get [post]
 // 用户查询(单个)
@@ -89,18 +89,18 @@ func GetJenkins(ctx *gin.Context) {
 	}
 }
 
-// @Summary 用户删除
-// @Tags 用户管理
+// @Summary Jenkins配置删除
+// @Tags Jenkins管理
 // @Produce application/json
 // @Accept application/json
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Token
 // @Param Token header string true "Insert your access Token"<Add access token here>
-// @Param  forms.UsernameForm body forms.UsernameForm true "用户信息"
+// @Param  forms.Jenkins_INFO body forms.UsernameForm true "jenkins URL信息"
 // @Success 200
-// @Router /v1/user/delete [post]
-// 删除用户
+// @Router /v1/jenkins/delete [post]
+// 删除Jenkins配置
 func DeleteJenkins(ctx *gin.Context) {
 	var jenkins forms.Jenkins_Get
 	if err := ctx.BindJSON(&jenkins); err != nil {
@@ -125,19 +125,19 @@ func DeleteJenkins(ctx *gin.Context) {
 
 }
 
-// @Summary 用户修改
-// @Tags 用户管理
+// @Summary Jenkins修改
+// @Tags Jenkins管理
 // @Produce application/json
 // @Accept application/json
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Token
 // @Param Token header string true "Insert your access Token"<Add access token here>
-// @Param  forms.UserInfo body forms.UserInfo true "用户信息"
+// @Param  forms.Jenkins_INFO body forms.Jenkins_INFO true "用户信息"
 // @Success 200
 // @Security ApiKeyAuth
-// @Router /v1/user/update [post]
-// 用户修改
+// @Router /v1/jenkins/update [post]
+// Jenkins 修改
 func UpdateJenkins(ctx *gin.Context) {
 	var user forms.UserInfo
 	if err := ctx.BindJSON(&user); err != nil {

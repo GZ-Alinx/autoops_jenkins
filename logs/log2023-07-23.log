@@ -1,0 +1,71 @@
+2023-07-23T15:11:17.666+0800	INFO	dao/user.go:32	用户已存在
+2023-07-23T15:11:17.666+0800	INFO	controller/user.go:195	用户已存在
+2023-07-23T15:11:41.208+0800	INFO	middlewares/middleware.go:31	/v1/jenkins/gettoken	{"status": 401, "method": "POST", "path": "/v1/jenkins/gettoken", "query": "", "ip": "127.0.0.1", "user-agent": "PostmanRuntime-ApipostRuntime/1.1.0", "errors": "", "cost": "1.398375ms"}
+2023-07-23T15:12:01.742+0800	INFO	dao/jenkins_info.go:77	查询的jenkins不存在
+2023-07-23T15:12:01.742+0800	INFO	controller/jenkins_job.go:51		{"status": "查询错误"}
+2023-07-23T15:20:57.809+0800	INFO	dao/user.go:32	用户已存在
+2023-07-23T15:20:57.809+0800	INFO	controller/user.go:195	用户已存在
+2023-07-23T15:21:05.264+0800	INFO	dao/jenkins_info.go:77	查询的jenkins不存在
+2023-07-23T15:21:05.264+0800	INFO	controller/jenkins_job.go:50		{"status": "查询错误"}
+2023-07-23T15:22:37.009+0800	INFO	dao/jenkins_info.go:77	查询的jenkins不存在
+2023-07-23T15:22:37.010+0800	INFO	controller/jenkins_job.go:50		{"status": "查询错误"}
+2023-07-23T15:22:48.617+0800	INFO	dao/jenkins_info.go:77	查询的jenkins不存在
+2023-07-23T15:22:48.618+0800	INFO	controller/jenkins_job.go:50		{"status": "查询错误"}
+2023-07-23T15:23:11.923+0800	ERROR	controller/jenkins.go:44		{"status": "查询错误"}
+autoops_jenkins/api/controller.JenkinsAdd
+	/Users/alinx/Downloads/autoops_jenkins/api/controller/jenkins.go:44
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173
+autoops_jenkins/middlewares.JWTAuth.func1
+	/Users/alinx/Downloads/autoops_jenkins/middlewares/jwt.go:88
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173
+autoops_jenkins/middlewares.Cors.func1
+	/Users/alinx/Downloads/autoops_jenkins/middlewares/cors.go:27
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173
+autoops_jenkins/middlewares.GinRecovery.func1
+	/Users/alinx/Downloads/autoops_jenkins/middlewares/middleware.go:89
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173
+autoops_jenkins/middlewares.GinLogger.func1
+	/Users/alinx/Downloads/autoops_jenkins/middlewares/middleware.go:25
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/recovery.go:101
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173
+github.com/gin-gonic/gin.LoggerWithConfig.func1
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/logger.go:240
+github.com/gin-gonic/gin.(*Context).Next
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/gin.go:616
+github.com/gin-gonic/gin.(*Engine).ServeHTTP
+	/Users/alinx/gopath/pkg/mod/github.com/gin-gonic/gin@v1.8.1/gin.go:572
+net/http.serverHandler.ServeHTTP
+	/usr/local/go/src/net/http/server.go:2936
+net/http.(*conn).serve
+	/usr/local/go/src/net/http/server.go:1995
+2023-07-23T15:23:11.927+0800	INFO	middlewares/middleware.go:31	/v1/jenkins/add	{"status": 402, "method": "POST", "path": "/v1/jenkins/add", "query": "", "ip": "127.0.0.1", "user-agent": "PostmanRuntime-ApipostRuntime/1.1.0", "errors": "", "cost": "53.392417ms"}
+2023-07-23T15:24:00.582+0800	INFO	dao/user.go:32	用户已存在
+2023-07-23T15:24:00.582+0800	INFO	controller/user.go:195	用户已存在
+2023-07-23T15:24:05.019+0800	INFO	dao/jenkins_info.go:28	用户添加成功
+2023-07-23T15:24:05.020+0800	INFO	controller/jenkins.go:50	添加成功
+2023-07-23T15:24:45.860+0800	INFO	middlewares/middleware.go:31	/v1/jenkins/gettoken	{"status": 401, "method": "POST", "path": "/v1/jenkins/gettoken", "query": "", "ip": "127.0.0.1", "user-agent": "PostmanRuntime-ApipostRuntime/1.1.0", "errors": "", "cost": "142.75µs"}
+2023-07-23T15:25:12.281+0800	INFO	middlewares/middleware.go:31	/v1/jenkins/gettoken	{"status": 401, "method": "POST", "path": "/v1/jenkins/gettoken", "query": "", "ip": "127.0.0.1", "user-agent": "PostmanRuntime-ApipostRuntime/1.1.0", "errors": "", "cost": "126.583µs"}
+2023-07-23T15:25:17.192+0800	INFO	controller/jenkins_job.go:50		{"status": "查询成功"}
+2023-07-23T15:26:16.849+0800	INFO	dao/user.go:32	用户已存在
+2023-07-23T15:26:16.849+0800	INFO	controller/user.go:195	用户已存在
+2023-07-23T15:26:20.933+0800	INFO	controller/jenkins_job.go:50		{"status": "查询成功"}
+2023-07-23T15:27:52.529+0800	INFO	dao/user.go:32	用户已存在
+2023-07-23T15:27:52.530+0800	INFO	controller/user.go:195	用户已存在
+2023-07-23T15:27:57.010+0800	INFO	controller/jenkins_job.go:50		{"status": "查询成功"}
+2023-07-23T15:28:47.829+0800	INFO	dao/user.go:32	用户已存在
+2023-07-23T15:28:47.830+0800	INFO	controller/user.go:195	用户已存在
+2023-07-23T15:28:51.813+0800	INFO	controller/jenkins_job.go:50		{"status": "查询成功"}
+2023-07-23T15:49:39.590+0800	INFO	dao/user.go:32	用户已存在
+2023-07-23T15:49:39.590+0800	INFO	controller/user.go:195	用户已存在
+2023-07-23T15:50:38.600+0800	INFO	middlewares/middleware.go:31	/v1/jenkins/jobadd	{"status": 401, "method": "POST", "path": "/v1/jenkins/jobadd", "query": "", "ip": "127.0.0.1", "user-agent": "PostmanRuntime-ApipostRuntime/1.1.0", "errors": "", "cost": "614.833µs"}
+2023-07-23T15:50:59.273+0800	INFO	controller/jenkins_job.go:46		{"status": "查询成功"}
