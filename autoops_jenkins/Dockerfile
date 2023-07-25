@@ -1,6 +1,6 @@
 FROM centos
 WORKDIR /
-COPY aotoops_jenkins .
+COPY autoops_jenkins .
 COPY config.yaml .
 EXPOSE 51000
-CMD [ "/aotoops_jenkins" ]
+CMD [ "/autoops_jenkins" ]

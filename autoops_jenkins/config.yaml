@@ -4,7 +4,7 @@ logsAddress: "./logs/"
 
 mysql:
   username: "root"
-  host: "121.37.204.75"
+  host: "172.17.0.2"
   port: 3306
   password: ""
   dbname: "autoops"
@@ -12,7 +12,7 @@ mysql:
   SetMaxIdleConns: 1000
 
 redis:
-  host: "121.37.204.75"
+  host: "172.17.0.3"
   port: 6379
   password: ""
   db: 01
