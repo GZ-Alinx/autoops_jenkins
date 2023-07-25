@@ -6,7 +6,7 @@ mysql:
   username: "root"
   host: "121.37.204.75"
   port: 3306
-  password: "adl1314520"
+  password: ""
   dbname: "autoops"
   SetMaxOpenConns: 500
   SetMaxIdleConns: 1000
@@ -14,7 +14,7 @@ mysql:
 redis:
   host: "121.37.204.75"
   port: 6379
-  password: "adl1314520"
+  password: ""
   db: 01
 jwt:
   key: "webapiverygood"
