@@ -1,0 +1,237 @@
+def createVersion() {
+    // 定义一个版本号作为当次构建的版本，输出格式 20191210175842_69
+    return new Date().format('yyyyMMddHHmmss') + "_${env.BUILD_ID}"
+}
+
+
+pipeline {
+    agent{
+        node{
+            // 执行Jenkins节点
+            label 'master'
+            // job路径以编号为准
+            customWorkspace "workspace/$JOB_NAME/$BUILD_NUMBER"
+        }
+    }
+
+    environment {
+        // PATH = "PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/maven/bin:/usr/local/jdk1.8.0_202/bin/:/usr/local/jdk1.8.0_202/jre/"
+        _version = createVersion()
+    }
+
+    // 配置
+    options {
+        // 禁止同时执行
+        // disableConcurrentBuilds()
+
+        // 超时时间 10分钟
+        timeout(time: 10, unit: 'MINUTES')
+    }
+    
+    // 构建参数
+    parameters {
+        // 发布参数
+        // '中国','中国/香港/泰国/菲律宾/马来西亚/新加坡/俄罗斯/德国(临时)','韩国/日本', '印尼/澳大利亚','美国','南美'
+        choice(name: 'country', choices: ['中国','香港','韩国', '澳大利亚','美国'], description: '部署位置')
+        choice(name: 'service_name', choices: ['lb-sweeping-oauth2','lb-sweeping-operation', 'lb-sweeping-operation-sharding', 'lb-sweeping-operation-system', 'lb-sweeping-protocol', 'lb-sweeping-zuul',], description: '服务名称')
+        choice(name: 'envs', choices: ['prod',], description: '部署环境')
+    }
+
+    // 构建步骤
+    stages {
+        stage('GetCode') {
+            steps {
+                script {
+                    // code get 
+                    // git config --global http.sslVerify false
+                    sh """ git config --global http.sslVerify false """
+                    if ( service_name == 'lb-sweeping-oauth2' ) {
+                        echo "代码获取 lb-sweeping-oauth2"
+                        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/lb/lb-sweeping-oauth2.git']])
+                    } else if ( service_name == 'lb-sweeping-operation') {
+                        echo "代码获取 lb-sweeping-operation"
+                        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/lb/lb-sweeping-operation.git']])
+                    } else if  ( service_name == 'lb-sweeping-operation-sharding') {
+                        echo "代码获取 lb-sweeping-operation-sharding"
+                        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/lb/lb-sweeping-operation-sharding.git']])
+                    } else if  ( service_name == 'lb-sweeping-operation-system') {
+                        echo "代码获取 lb-sweeping-operation-system"
+                        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/lb/lb-sweeping-operation-system.git']])
+                    } else if  ( service_name == 'lb-sweeping-protocol') {
+                        echo "代码获取 lb-sweeping-protocol"
+                        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/lb/lb-sweeping-protocol.git']])
+                    } else if  ( service_name == 'lb-sweeping-zuul') {
+                        echo "代码获取 lb-sweeping-zuul"
+                        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/lb/lb-sweeping-zuul.git']])
+                    }  else {
+                        echo "无法匹配服务"
+                        exit 1
+                    }
+                }
+            }
+        }
+        // 构建编译
+        stage('构建编译') {
+            steps {
+                script {
+                    echo "代码构建"
+                    sh ''' mvn -U clean -Dmaven.test.skip=true package  '''
+                }
+            }
+        }
+        // 发布服务 
+        stage('镜像构建') {
+            steps {
+                script {
+                    echo "镜像构建服务："+ service_name
+                     // -0.0.1-SNAPSHOT.jar
+                    if ( country == '美国' ) {
+                        countrycode = 'us'
+                        sh """ 
+                        docker login devops-harbor.lynkbey2.com --username=admin --password=031EKOZ0sNNdKPfYDfIye7aW
+                        cp target/${service_name}-0.0.1-SNAPSHOT.jar .
+                        docker build -t devops-harbor.lynkbey2.com/${countrycode}-app/${service_name}:${_version} . && echo "镜像构建成功" || echo "镜像构建失败"
+                        docker push devops-harbor.lynkbey2.com/${countrycode}-app/${service_name}:${_version} && echo "镜像推送成功" || echo "镜像推送失败"
+                        """
+                    } else if ( country == '香港'  ) {
+                        countrycode = 'hk'
+                        sh """ 
+                        docker login devops-harbor.lynkbey2.com --username=admin --password=031EKOZ0sNNdKPfYDfIye7aW
+                        cp target/${service_name}-0.0.1-SNAPSHOT.jar .
+                        docker build -t devops-harbor.lynkbey2.com/${countrycode}-app/${service_name}:${_version} . && echo "镜像构建成功" || echo "镜像构建失败"
+                        docker push devops-harbor.lynkbey2.com/${countrycode}-app/${service_name}:${_version} && echo "镜像推送成功" || echo "镜像推送失败"
+                        """
+                    }else if ( country == '韩国'  ) {
+                        countrycode = 'kr'
+                        sh """ 
+                        docker login devops-harbor.lynkbey2.com --username=admin --password=031EKOZ0sNNdKPfYDfIye7aW
+                        cp target/${service_name}-0.0.1-SNAPSHOT.jar .
+                        docker build -t devops-harbor.lynkbey2.com/${countrycode}-app/${service_name}:${_version} . && echo "镜像构建成功" || echo "镜像构建失败"
+                        docker push devops-harbor.lynkbey2.com/${countrycode}-app/${service_name}:${_version} && echo "镜像推送成功" || echo "镜像推送失败"
+                        """
+                    }else if ( country == '澳大利亚'  ) {
+                        countrycode = 'au'
+                        sh """ 
+                        docker login devops-harbor.lynkbey2.com --username=admin --password=031EKOZ0sNNdKPfYDfIye7aW
+                        cp target/${service_name}-0.0.1-SNAPSHOT.jar .
+                        docker build -t devops-harbor.lynkbey2.com/${countrycode}-app/${service_name}:${_version} . && echo "镜像构建成功" || echo "镜像构建失败"
+                        docker push devops-harbor.lynkbey2.com/${countrycode}-app/${service_name}:${_version} && echo "镜像推送成功" || echo "镜像推送失败" 
+                        """
+                    }else if ( country == '中国'  ) {
+                        sh """ 
+                        docker login devops-harbor.lynkbey2.com --username=admin --password=031EKOZ0sNNdKPfYDfIye7aW
+                        cp target/${service_name}-0.0.1-SNAPSHOT.jar .
+                        docker build -t devops-harbor.lynkbey2.com/app/${service_name}:${_version} . && echo "镜像构建成功" || echo "镜像构建失败"
+                        docker push devops-harbor.lynkbey2.com/app/${service_name}:${_version} && echo "镜像推送成功" || echo "镜像推送失败"
+                        """
+                    } else {
+                        echo "未能匹配到合适国家或地区"
+                    }
+                }
+            }
+        }
+        // 服务部署
+        stage('服务部署') {
+            steps {
+                script {
+                    sh """
+                    echo "发布服务: ${service_name}"
+                    echo "镜像版本：${_version}"
+                    echo "国家地区：${country}"
+                    """
+                    // echo "开始部署${country}地区服务${service_name}, 镜像版本号: ${_version} 国家地区代码： ${countrycode}"
+                    if ( country != '中国' ) {
+                        // input  "镜像同步是否完成"
+                        if ( country == '美国' ) {
+                            countrycode = 'us'
+                            echo "开始部署${country}地区服务${service_name}, 镜像版本号: ${_version}  国家地区代码： ${countrycode}"
+                            checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/devops/devops_deploy.git']])
+                            sh """ 
+                            /usr/bin/sed -i 's/versiontag/${_version}/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/sed -i 's/runenvs/usa/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/kubectl  --kubeconfig=/root/.kube/app-us apply -f kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            """
+                        } else if ( country == '香港'  ) {
+                            countrycode = 'hk'
+                            echo "开始部署${country}地区服务${service_name}, 镜像版本号: ${_version} 国家地区代码： ${countrycode}"
+                            checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/devops/devops_deploy.git']])
+                            sh """ 
+                            /usr/bin/sed -i 's/versiontag/${_version}/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/sed -i 's/runenvs/hk/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/kubectl  --kubeconfig=/root/.kube/app-hk apply -f kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            """
+                        } else if  ( country == '韩国' ) {
+                            countrycode = 'kr'
+                            echo "开始部署${country}地区服务${service_name}, 镜像版本号: ${_version} 国家地区代码： ${countrycode}"
+                            checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/devops/devops_deploy.git']])
+                            sh """ 
+                            /usr/bin/sed -i 's/versiontag/${_version}/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/sed -i 's/runenvs/korea/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/kubectl  --kubeconfig=/root/.kube/app-kr apply -f kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            """
+                        } else if  ( country == '澳大利亚' ) {
+                            countrycode = 'au'
+                            echo "开始部署${country}地区服务${service_name}, 镜像版本号: ${_version} 国家地区代码： ${countrycode}"
+                            checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/devops/devops_deploy.git']])
+                            sh """ 
+                            /usr/bin/sed -i 's/versiontag/${_version}/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/sed -i 's/runenvs/sydney/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/kubectl  --kubeconfig=/root/.kube/app-au apply -f kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            """
+                        }  else {
+                            echo "无法匹配地区"
+                            exit 1
+                        }
+                    }else {
+                        countrycode = 'cn'
+                        echo "开始部署${country}地区服务${service_name}, 镜像版本号: ${_version}  国家地区代码： ${countrycode}"
+                        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'devops', url: 'https://47.116.10.251:1443/devops/devops_deploy.git']])
+                        sh """ 
+                            /usr/bin/sed -i 's/versiontag/${_version}/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/sed -i 's/runenvs/${envs}/g' kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                            /usr/bin/kubectl apply -f kubernetes/${envs}/${countrycode}/deployment/${service_name}-deployment.yaml
+                        """
+                    }
+
+                }
+            }
+        }
+    }
+
+    // 构建后操作
+    post {
+        always {
+            script {
+                echo "构建数据统计模块"
+            }
+        }
+        success {
+            script{
+                echo "deploy is Success"
+                sh """ 
+                curl --request POST \
+                --url http://101.132.151.182:9090/send \
+                --header 'content-type: application/json' \
+                --data '{
+                    "type": "feishu",
+                    "context": "生产环境 ${country} [ 服务：${service_name} 部署成功 ]"
+                }'
+                """
+            }
+        }
+        failure {
+            script{
+                echo "deploy is Failure"
+                sh """ 
+                curl --request POST \
+                --url http://101.132.151.182:9090/send \
+                --header 'content-type: application/json' \
+                --data '{
+                    "type": "feishu",
+                    "context": "生产环境 ${country}[ 服务：${service_name} 部署失败 ]"
+                }'
+                """
+            }
+        }
+    }
+}

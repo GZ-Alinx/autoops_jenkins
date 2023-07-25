@@ -1,0 +1,121 @@
+def createVersion() {
+    // 定义一个版本号作为当次构建的版本，输出格式 20191210175842_69
+    return new Date().format('yyyyMMddHHmmss') + "_${env.BUILD_ID}"
+}
+                    
+pipeline {
+    agent{
+        node{
+            // 执行Jenkins节点
+            label 'master'
+            // job路径以编号为准
+            customWorkspace "workspace/$JOB_NAME/$BUILD_NUMBER"
+        }
+    }
+
+    environment {
+        PATH = "PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin"
+        _version = createVersion()
+    }
+
+    // 配置
+    options {
+        // 禁止同时执行
+        // disableConcurrentBuilds()
+
+        // 超时时间 10分钟
+        timeout(time: 10, unit: 'MINUTES')
+    }
+    
+    // 构建参数
+    parameters {
+        // 发布参数
+        choice(name: 'service_name', choices: ['autoops_jenkins',], description: '服务名称')
+        choice(name: 'host', choices: ['121.37.204.75',], description: '部署主机')
+        choice(name: 'envs', choices: ['prod',], description: '部署环境')
+    }
+
+    // 构建步骤
+    stages {
+        stage('GetCode') {
+            steps {
+                script {
+                    // code get 
+                    // git config --global http.sslVerify false
+                    sh """ git config --global http.sslVerify false """
+                    if ( service_name == 'autoops_jenkins' ) {
+                        echo "代码获取"
+                        checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'ac1038ce-bc18-491f-b2ed-f4294757c955', url: 'https://github.com/GZ-Alinx/autoops_jenkins.git']])
+                    }  else {
+                        echo "无法匹配服务"
+                        exit 1
+                    }
+                }
+            }
+        }
+        // 构建编译
+        stage('构建编译') {
+            steps {
+                script {
+                    echo "代码构建"
+                    sh ''' go mod tidy && go build .  '''
+                }
+            }
+        }
+        // 发布服务 
+        stage('镜像构建') {
+            steps {
+                script {
+                    echo "镜像构建服务："+ service_name
+                    // -0.0.1-SNAPSHOT.jar
+                    sh """ 
+                    docker build -t 1135189009/autoops:${_version} . && echo "镜像构建成功" || echo "镜像构建失败"
+                    docker push 1135189009/autoops:${_version} && echo "镜像推送成功" || echo "镜像推送失败"
+                    """
+                }
+            }
+        }
+        // 服务部署
+        stage('服务部署') {
+            steps {
+                script {
+                    sh """
+                    echo "发布服务: ${service_name}"
+                    echo "镜像版本：${_version}"
+                    
+                    """
+                    if ( service_name == 'lb-sweeping-oauth2' ) {
+                        echo " 服务部署 lb-sweeping-oauth2"
+                        sh """ 
+                            ssh root@${host} 'docker ps | grep ${service_name} && docker stop ${service_name} && docker rm -f ${service_name} || docker stop ${service_name}; docker rm -f ${service_name} || echo "开始启动服务" '
+                            ssh root@${host} 'docker ps | grep ${service_name} || docker run  --restart=always  -p   51000:51000  \
+                                --name  ${service_name}  --net=host  -itd  1135189009/autoops:${_version}' 
+                        """
+                    }  else {
+                        echo "无法匹配服务"
+                        exit 1
+                    }
+                }
+            }
+        }
+    }
+
+    // 构建后操作
+    post {
+        always {
+            script {
+                echo "构建数据统计模块"
+            }
+        }
+        success {
+            script{
+                echo "deploy is Success"
+            }
+        }
+        failure {
+            script{
+                echo "deploy is Failure"
+            }
+        }
+    }
+}
